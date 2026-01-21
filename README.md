@@ -31,4 +31,4 @@ Attraverso l'analisi dei grafi, il progetto esplora:
 ├── 📂 assets/
 │   └── 📂 images/            # Grafici generati
 └── 📄 README.md   
-└── 📄 Project_Report.pdf        # Documentazione del progetto
+└── 📄 Project_Report.pdf     # Documentazione del progetto
