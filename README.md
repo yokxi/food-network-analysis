@@ -1,8 +1,7 @@
-# 🥘 Computational Gastronomy: Network Analysis of Catalan Cuisine
+# Computational Gastronomy: Network Analysis of Catalan Cuisine
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python)
 ![NetworkX](https://img.shields.io/badge/Library-NetworkX-green?style=flat)
-![Status](https://img.shields.io/badge/Status-Completed-success)
 
 Questo progetto applica tecniche di **Network Science** e **Computational Gastronomy** per analizzare l'evoluzione della cucina catalana. L'obiettivo è confrontare la struttura topologica delle ricette tradizionali con quella dell'Alta Cucina moderna (rappresentata dal ristorante *El Celler de Can Roca*), modellando le ricette come una rete complessa basata sulla condivisione degli ingredienti.
 
@@ -23,12 +22,13 @@ Attraverso l'analisi dei grafi, il progetto esplora:
 ## 📂 Struttura del Repository
 
 ```text
-├── 📓 main.ipynb             # Notebook Jupyter principale con tutto il codice di analisi
-├── 📂 db/                    # Dataset (Matrici di adiacenza e liste nomi)
+├── 📓 main.ipynb             # Notebook Jupyter
+├── 📂 db/                    # Dataset 
 │   ├── 101_mat_ricette_output.txt
 │   ├── Roca_mat_ricette_output.txt
 │   ├── Ctrad_mat_ricette_substitution_output.txt
 │   └── RecipeID_name_list_Ctrad.txt
 ├── 📂 assets/
-│   └── 📂 images/            # Grafici generati (Backbone, Robustezza, ecc.)
-└── 📄 README.md              # Documentazione del progetto
+│   └── 📂 images/            # Grafici generati
+└── 📄 README.md   
+└── 📄 Project_Report.pdf        # Documentazione del progetto
