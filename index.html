@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisi Topologica di Reti Alimentari</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="hero">
+        <div class="hero-content">
+            <p class="subtitle">Laboratorio di I.A. &mdash; Computational Gastronomy</p>
+            <h1>Analisi Topologica di Reti Alimentari</h1>
+            <p class="lead">Analisi della cucina catalana</p>
+            <div class="meta">
+                <p><strong>Studente:</strong> AURORA GUIDA</p>
+                <p>Corso di Laurea Magistrale in Scienze Informatiche<br>Università degli Studi di Parma</p>
+                <p class="date">Anno Accademico 2025-2026</p>
+            </div>
+            <a href="#intro" class="scroll-down"><i class="fas fa-arrow-down"></i></a>
+        </div>
+        <div class="hero-bg"></div>
+    </header>
+
+    <nav id="navbar">
+        <div class="container">
+            <span class="logo">FoodNetwork</span>
+            <ul>
+                <li><a href="#intro">Introduzione</a></li>
+                <li><a href="#preprocessing">Preprocessing</a></li>
+                <li><a href="#modeling">Modellazione</a></li>
+                <li><a href="#community">Community</a></li>
+                <li><a href="#backbone">Backbone</a></li>
+                <li><a href="#conclusions">Conclusioni</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <section id="intro" class="chapter">
+            <h2>1. Introduzione e Obiettivi</h2>
+
+            <div class="content-block">
+                <h3>Il contesto: Computational Gastronomy</h3>
+                <p>Il presente progetto si inserisce nel campo della <em>Computational Gastronomy</em>, una disciplina
+                    che applica la scienza dei dati e la teoria delle reti allo studio delle culture culinarie.
+                    L'obiettivo principale è analizzare le relazioni tra ingredienti in diverse tipologie di cucina per
+                    comprendere se esistano pattern strutturali ricorrenti o differenze significative tra la tradizione
+                    e l'alta cucina moderna.</p>
+
+                <p>Nello specifico, sono stati analizzati tre dataset distinti rappresentanti matrici di adiacenza di
+                    ricette:</p>
+                <ul class="feature-list">
+                    <li><strong>Cucina Tradizionale (101):</strong> Un corpus di ricette classiche.</li>
+                    <li><strong>Alta Cucina (Roca):</strong> Un menu completo del rinomato ristorante <em>El Celler de
+                            Can Roca</em>.</li>
+                    <li><strong>Substitution (Ctrad):</strong> Una variante focalizzata sulle sostituzioni di
+                        ingredienti.</li>
+                </ul>
+            </div>
+
+            <div class="content-block">
+                <h3>Obiettivi dell'analisi</h3>
+                <p>L'analisi non si è limitata alla visualizzazione dei dati, ma ha seguito un rigoroso flusso di lavoro
+                    di <em>Data Science</em> (Workflow) per rispondere a domande specifiche:</p>
+                <ul>
+                    <li>Come sono strutturate le reti di sapori? Sono disperse o coese?</li>
+                    <li>Esistono "comunità" di ricette ben definite (es. dolci vs salati) o la cucina è un continuum?
+                    </li>
+                    <li>Qual è lo "scheletro" (Backbone) che sostiene l'identità culinaria di questi dataset?</li>
+                </ul>
+                <p>Nel corso di questa relazione, verranno dettagliate le fasi di <strong>Preprocessing</strong>,
+                    <strong>Modellazione a Grafo</strong> e <strong>Analisi Topologica</strong>, collegando ogni
+                    passaggio ai fondamenti teorici del corso.
+                </p>
+            </div>
+
+        </section>
+
+        <section id="preprocessing" class="chapter">
+            <h2>2. Preprocessing e Pulizia dei Dati</h2>
+
+            <p>Come discusso nella teoria del corso (cfr. <em>Preprocessing dei Dati</em>), la qualità dell'input
+                determina la qualità del modello (<em>Garbage In, Garbage Out</em>). I dati forniti non erano pronti per
+                l'analisi immediata, richiedendo una fase strutturata di pulizia e trasformazione.</p>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Acquisizione e Parsing</h3>
+                    <p>I file originali erano output testuali grezzi generati dal linguaggio statistico R. Questi file
+                        presentavano diverse problematiche di "Rumore" (<em>Noisy Data</em>):</p>
+                    <ul>
+                        <li>Intestazioni testuali non informative (es. "Matrice:", "File:").</li>
+                        <li>Formattazione irregolare con indici di riga (es. <code>[1,]</code>) mescolati ai dati.</li>
+                        <li>Spaziature incostanti.</li>
+                    </ul>
+                    <p>È stato implementato un algoritmo di <strong>Parsing Robust</strong> basato su Espressioni
+                        Regolari (Regex). L'algoritmo scansiona il file riga per riga, identificando pattern numerici
+                        validi e scartando metadati corrotti o inutili.</p>
+                </div>
+                <div class="card">
+                    <h3>Simmetrizzazione</h3>
+                    <p>Molti file contenevano solo la porzione triangolare superiore o inferiore della matrice. In
+                        termini di Teoria dei Grafi, una matrice di adiacenza $M$ per un grafo non orientato deve
+                        soddisfare la proprietà di simmetria: $M_{ij} = M_{ji}$.</p>
+                    <p>Per correggere questa "perdita di informazione", è stata applicata una trasformazione algebrica
+                        sommando la matrice alla sua trasposta, ricostruendo così la matrice di adiacenza completa.</p>
+                </div>
+                <div class="card">
+                    <h3>Data Transformation</h3>
+                    <p>Infine, i dati sono stati convertiti in matrici <code>NumPy</code>. Per garantire la consistenza
+                        dimensionale, è stato applicato un taglio (<em>Trimming</em>) per assicurare che la matrice
+                        fosse perfettamente quadrata ($N \times N$).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="modeling" class="chapter">
+            <h2>3. Modellazione a Grafo e Metriche</h2>
+
+            <p>Una volta puliti i dati, si è passati alla fase di modellazione. Si è scelto di rappresentare il dominio
+                culinario tramite un <strong>Grafo Pesato Non Orientato</strong> $G = (V, E, W)$.</p>
+
+            <div class="definition-box">
+                <h4>Definizione del Modello</h4>
+                <ul>
+                    <li><strong>Nodi ($V$):</strong> Rappresentano le singole ricette del dataset.</li>
+                    <li><strong>Archi ($E$):</strong> Un arco collega due nodi se le ricette condividono almeno un
+                        ingrediente.</li>
+                    <li><strong>Pesi ($W$):</strong> Il peso dell'arco $w_{ij}$ corrisponde al numero esatto di
+                        ingredienti condivisi (Flavor Sharing).</li>
+                </ul>
+            </div>
+
+            <h3>Analisi Topologica (Benchmarking)</h3>
+            <p>Utilizzando i concetti di <em>Benchmarking</em> e analisi delle reti, sono state calcolate metriche
+                globali per confrontare la struttura della cucina Tradizionale con quella Moderna (Roca).</p>
+
+            <div class="comparison">
+                <div class="col">
+                    <h4>Cucina Tradizionale</h4>
+                    <p>Ha mostrato una densità alta ($\approx 0.81$), indicando una forte condivisione di ingredienti
+                        base (es. soffritti), ma mantenendo una certa variabilità.</p>
+                </div>
+                <div class="col">
+                    <h4>Alta Cucina (Roca)</h4>
+                    <p>Ha mostrato una densità estrema ($\approx 0.998$). Questo trasforma la rete quasi in una
+                        <strong>Clique</strong> (Grafo Completo). Ciò suggerisce che nel menu di Roca, quasi ogni piatto
+                        richiama sapori presenti in tutti gli altri piatti.
+                    </p>
+                </div>
+            </div>
+
+            <div class="table-wrapper" style="margin-top: 2rem; margin-bottom: 3rem;">
+                <h4 style="text-align: center;">Tabella 1: Confronto metriche topologiche</h4>
+                <table style="width: 100%; border-collapse: collapse; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <thead style="background-color: #34495e; color: white;">
+                        <tr>
+                            <th style="padding: 10px;">Metrica</th>
+                            <th style="padding: 10px;">Tradizionale (101)</th>
+                            <th style="padding: 10px;">Substitution (160)</th>
+                            <th style="padding: 10px;">Alta Cucina (Roca)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Numero di Nodi (|V|)</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">100</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">160</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">57</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Numero di Archi (|E|)</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">4052</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">12309</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">1594</td>
+                        </tr>
+                        <tr style="background-color: #f0f0f0;">
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Densità</strong></td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>0.818</strong></td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.967</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>0.998</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Grado Medio</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">81.04</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">153.86</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">55.93</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Clustering Coeff.</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.948</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.982</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>0.998</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Path Length Medio</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">1.182</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">1.032</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>1.001</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">Modularità</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.054</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.047</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">0.043</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="text-align: center; font-style: italic; color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                    Tabella 1: Confronto metriche topologiche. Si evidenzia la densità quasi unitaria di Roca.</p>
+            </div>
+
+            <h3>Visualizzazione delle Reti</h3>
+            <div class="gallery" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                <figure>
+                    <img src="assets/images/grafo_Tradizionale.png" alt="Grafo Cucina Tradizionale" class="zoomable">
+                    <figcaption>Cucina Tradizionale</figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/images/grafo_Alta.png" alt="Grafo Alta Cucina" class="zoomable">
+                    <figcaption>Alta Cucina (Roca)</figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/images/grafo_Substitution.png" alt="Grafo Substitution" class="zoomable">
+                    <figcaption>Substitution (Ctrad)</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="community" class="chapter">
+            <h2>4. Community Detection e l'Effetto Hairball</h2>
+
+            <p>Uno degli obiettivi era verificare se fosse possibile distinguere automaticamente categorie di piatti
+                (es. Primi, Secondi, Dolci) basandosi solo sugli ingredienti. Per fare ciò, è stato applicato un
+                algoritmo di <strong>Community Detection</strong> (Greedy Modularity).</p>
+
+            <div class="alert-box">
+                <h4>Risultati: L'Effetto Hairball</h4>
+                <p>L'applicazione dell'algoritmo ai nostri dataset ha restituito valori di Modularità estremamente bassi
+                    (intorno a <strong>0.04 - 0.05</strong>).</p>
+                <p>Questo fenomeno è noto come <strong>Hairball Effect</strong>. Significa che la rete culinaria non è
+                    frammentata in isole separate. Esistono ingredienti "ponte" (Hub) utilizzati trasversalmente (es.
+                    zucchero, uova, farina, cipolla, olio). La cucina catalana appare quindi come un
+                    <strong>continuum</strong> omogeneo.
+                </p>
+            </div>
+        </section>
+
+        <section id="backbone" class="chapter">
+            <h2>5. Backbone Extraction (MST)</h2>
+
+            <p>Dato l'altissimo livello di densità, è stato necessario applicare l'estrazione del
+                <strong>Backbone</strong> (Scheletro) tramite <em>Maximum Spanning Tree (MST)</em>.
+            </p>
+            <p>L'algoritmo seleziona solo i collegamenti "più forti", ovvero le coppie di ricette che condividono il
+                maggior numero di ingredienti.</p>
+
+            <div class="gallery">
+                <figure>
+                    <img src="assets/images/backbone_Tradizionale.png" alt="Backbone Tradizionale">
+                    <figcaption>Backbone Cucina Tradizionale</figcaption>
+                </figure>
+                <figure>
+                    <img src="assets/images/backbone_Roca.png" alt="Backbone Roca">
+                    <figcaption>Backbone El Celler de Can Roca</figcaption>
+                </figure>
+            </div>
+
+            <h3>Confronto dei Legami Forti</h3>
+            <div class="tables-container">
+                <div class="table-wrapper">
+                    <h4>Legami Forti: Tradizionale</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nodo A</th>
+                                <th>Nodo B</th>
+                                <th>Peso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>69</td>
+                                <td>73</td>
+                                <td>14</td>
+                            </tr>
+                            <tr>
+                                <td>31</td>
+                                <td>32</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>42</td>
+                                <td>69</td>
+                                <td>12</td>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>26</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>60</td>
+                                <td>69</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>34</td>
+                                <td>72</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>26</td>
+                                <td>42</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>32</td>
+                                <td>69</td>
+                                <td>10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-wrapper">
+                    <h4>Legami Forti: Alta Cucina (Roca)</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nodo A</th>
+                                <th>Nodo B</th>
+                                <th>Peso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>14</td>
+                                <td>15</td>
+                                <td>20</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>18</td>
+                                <td>18</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>18</td>
+                                <td>17</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>35</td>
+                                <td>16</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>15</td>
+                                <td>15</td>
+                            </tr>
+                            <tr>
+                                <td>18</td>
+                                <td>41</td>
+                                <td>14</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>13</td>
+                                <td>14</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>22</td>
+                                <td>13</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusions" class="chapter">
+            <h2>6. Conclusioni</h2>
+            <div class="conclusion-list">
+                <div class="item">
+                    <span class="number">1</span>
+                    <p><strong>Densità Estrema:</strong> La cucina analizzata è una rete densa. Il ristorante Roca
+                        rappresenta un caso limite di <em>Clique</em> quasi perfetta.</p>
+                </div>
+                <div class="item">
+                    <span class="number">2</span>
+                    <p><strong>Assenza di Modularità:</strong> L'uso trasversale degli ingredienti crea un continuum
+                        gastronomico indivisibile.</p>
+                </div>
+                <div class="item">
+                    <span class="number">3</span>
+                    <p><strong>Efficacia del Backbone:</strong> Il <em>Maximum Spanning Tree</em> è fondamentale per
+                        rivelare i legami forti che costituiscono l'identità della cucina.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Laboratorio di I.A. presso Università degli Studi di Parma.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+
+</html>

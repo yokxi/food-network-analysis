@@ -30,5 +30,6 @@ Attraverso l'analisi dei grafi, il progetto esplora:
 │   └── RecipeID_name_list_Ctrad.txt
 ├── 📂 assets/
 │   └── 📂 images/            # Grafici generati
+├── 📂 teoria/                # Materiale teorico
 └── 📄 README.md   
 └── 📄 Project_Report.pdf     # Documentazione del progetto
