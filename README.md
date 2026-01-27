@@ -5,6 +5,8 @@
 
 Questo progetto applica tecniche di **Network Science** e **Computational Gastronomy** per analizzare l'evoluzione della cucina catalana. L'obiettivo è confrontare la struttura topologica delle ricette tradizionali con quella dell'Alta Cucina moderna (rappresentata dal ristorante *El Celler de Can Roca*), modellando le ricette come una rete complessa basata sulla condivisione degli ingredienti.
 
+**🌐 Visualizzazione Web:** [https://yokxi.github.io/food-network-analysis/](https://yokxi.github.io/food-network-analysis/)
+
 ---
 
 ## 🎯 Obiettivi
